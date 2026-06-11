@@ -291,6 +291,15 @@ a {
   box-shadow: 0 10px 25px rgba(21, 77, 53, 0.08);
 }
 
+/* Corrección: altura mínima para alinear misiones/trivia */
+.mission-card,
+.quiz-card {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .icon {
   font-size: 38px;
   margin-bottom: 15px;
@@ -410,7 +419,7 @@ a {
 .photo-preview {
   display: none;
   width: 100%;
-  max-height: 180px;
+  max-height: 120px;
   object-fit: cover;
   border-radius: 16px;
   margin-top: 14px;
