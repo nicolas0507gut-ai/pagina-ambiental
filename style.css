@@ -189,7 +189,8 @@ a {
 .info-grid { grid-template-columns: repeat(3, 1fr); }
 .problem-grid { grid-template-columns: repeat(2, 1fr); }
 .stats-grid { grid-template-columns: repeat(4, 1fr); }
-.missions-grid { grid-template-columns: repeat(3, 1fr); align-items: start; } /* alineación al inicio */
+/* Nuevo grid responsivo y alineado al inicio */
+.missions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; align-items: start; }
 .reuse-grid { grid-template-columns: repeat(4, 1fr); }
 
 /* Cards */
@@ -200,12 +201,12 @@ a {
   box-shadow: 0 10px 25px rgba(21, 77, 53, 0.08);
 }
 
-/* Corrección de altura uniforme para misiones y trivia */
+/* Altura uniforme para misiones y trivia */
 .mission-card, .quiz-card {
-  min-height: 360px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  height: 100%;
 }
 
 /* Icons y headers */
@@ -267,7 +268,7 @@ a {
 }
 .upload-box input { display: none; }
 
-.photo-preview { display: none; width: 100%; max-height: 120px; object-fit: cover; border-radius: 16px; margin-top: 14px; border: 3px solid #dff6d8; }
+.photo-preview { display: none; width: 100%; max-height: 120px; object-fit: cover; border-radius: 16px; margin-top: 14px; border: 3px solid #dff6d8; flex-shrink: 0; }
 .photo-preview.show { display: block; }
 
 /* Commitment */
@@ -289,4 +290,3 @@ footer { text-align: center; background: #0b4d36; color: white; padding: 25px; }
   .info-grid, .problem-grid, .stats-grid, .missions-grid, .reuse-grid, .impact-list, .progress-panel, .quiz-options { grid-template-columns: 1fr; }
   .section-title h2 { font-size: 30px; }
 }
-
