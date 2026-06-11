@@ -289,3 +289,4 @@ footer { text-align: center; background: #0b4d36; color: white; padding: 25px; }
   .info-grid, .problem-grid, .stats-grid, .missions-grid, .reuse-grid, .impact-list, .progress-panel, .quiz-options { grid-template-columns: 1fr; }
   .section-title h2 { font-size: 30px; }
 }
+
