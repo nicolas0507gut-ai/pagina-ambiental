@@ -9,9 +9,13 @@
 <body>
 
   <header class="hero" id="inicio">
+    <!-- hojas decorativas -->
+    <div class="leaf leaf-one"></div>
+    <div class="leaf leaf-two"></div>
+    <div class="leaf leaf-three"></div>
+
     <nav class="navbar">
       <div class="logo">EcoFlorencia</div>
-
       <div class="nav-links">
         <a href="#problema">Problema</a>
         <a href="#consecuencias">Consecuencias</a>
@@ -28,7 +32,6 @@
           Una página informativa e interactiva para conocer los problemas ambientales
           de Florencia de Mora y participar en misiones sencillas de cuidado ambiental.
         </p>
-
         <div class="hero-buttons">
           <a href="#misiones" class="btn primary">Empezar misiones</a>
           <a href="#consecuencias" class="btn secondary">Ver consecuencias</a>
@@ -206,6 +209,11 @@
         <article class="mission-card">
           <h3>Separar residuos</h3>
           <p>Separa botellas, envolturas o plásticos limpios en una bolsa durante un día.</p>
+          <label class="upload-box">
+            Subir foto de evidencia
+            <input type="file" accept="image/*" class="mission-photo" data-preview="preview-separar">
+          </label>
+          <img id="preview-separar" class="photo-preview" alt="Vista previa de evidencia">
           <button class="mission-btn" data-id="separar-residuos" data-points="10">
             Completar misión +10
           </button>
@@ -214,6 +222,11 @@
         <article class="mission-card">
           <h3>Maceta reciclada</h3>
           <p>Convierte una botella o envase plástico en una maceta pequeña para casa.</p>
+          <label class="upload-box">
+            Subir foto de evidencia
+            <input type="file" accept="image/*" class="mission-photo" data-preview="preview-maceta">
+          </label>
+          <img id="preview-maceta" class="photo-preview" alt="Vista previa de evidencia">
           <button class="mission-btn" data-id="maceta-reciclada" data-points="25">
             Completar misión +25
           </button>
@@ -222,6 +235,11 @@
         <article class="mission-card">
           <h3>Reducir una bolsa</h3>
           <p>Evita usar una bolsa plástica innecesaria o reutiliza una que ya tengas.</p>
+          <label class="upload-box">
+            Subir foto de evidencia
+            <input type="file" accept="image/*" class="mission-photo" data-preview="preview-bolsa">
+          </label>
+          <img id="preview-bolsa" class="photo-preview" alt="Vista previa de evidencia">
           <button class="mission-btn" data-id="reducir-bolsa" data-points="10">
             Completar misión +10
           </button>
@@ -230,6 +248,11 @@
         <article class="mission-card">
           <h3>Guardar reciclables</h3>
           <p>Lava y guarda una botella, lata o envase que pueda reutilizarse.</p>
+          <label class="upload-box">
+            Subir foto de evidencia
+            <input type="file" accept="image/*" class="mission-photo" data-preview="preview-guardar">
+          </label>
+          <img id="preview-guardar" class="photo-preview" alt="Vista previa de evidencia">
           <button class="mission-btn" data-id="guardar-reciclables" data-points="15">
             Completar misión +15
           </button>
