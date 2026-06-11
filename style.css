@@ -277,9 +277,12 @@ a {
 .commitment p { max-width: 650px; margin: auto; }
 #commitmentBtn { max-width: 260px; margin: 25px auto 0; background: #9be15d; color: #123527; }
 #commitmentMessage { margin-top: 18px; font-weight: bold; color: #dfffe8; }
-
-footer { text-align: center; background: #0b4d36; color: white; padding: 25px; }
-
+footer {
+  text-align: center;
+  background: red; /* cambio temporal para probar */
+  color: white;
+  padding: 25px;
+}
 #toast { position: fixed; bottom: 25px; right: 25px; background: #123527; color: white; padding: 16px 20px; border-radius: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.18); opacity: 0; pointer-events: none; transition: 0.3s ease; z-index: 999; }
 #toast.show { opacity: 1; }
 
