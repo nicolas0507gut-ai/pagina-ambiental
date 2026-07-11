@@ -565,3 +565,71 @@ footer {
 }
 
 /* rebuild force */
+/* Preguntas diarias */
+.daily-question-card {
+  min-height: 280px;
+}
+
+.daily-intro {
+  margin-bottom: 14px;
+}
+
+.daily-question-box {
+  margin-top: 10px;
+}
+
+.daily-question {
+  font-weight: bold;
+  color: #123527;
+  margin-bottom: 14px;
+}
+
+.daily-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.daily-option {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 14px;
+  background: #16854e;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.daily-option:hover {
+  background: #0b4d36;
+  transform: translateY(-2px);
+}
+
+.daily-option.correct {
+  background: #2eaf63;
+}
+
+.daily-option.wrong {
+  background: #c0392b;
+}
+
+.daily-option:disabled {
+  background: #a8b7ad;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.daily-message {
+  margin-top: 12px;
+  font-weight: bold;
+  color: #16854e;
+}
+
+.daily-cooldown {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #496558;
+  font-weight: bold;
+}
