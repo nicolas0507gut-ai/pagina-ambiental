@@ -3,8 +3,6 @@ const scoreElement = document.getElementById("score");
 const badgeElement = document.getElementById("badge");
 const progressFill = document.getElementById("progressFill");
 const missionButtons = document.querySelectorAll(".mission-btn");
-const quizOptions = document.querySelectorAll(".quiz-option");
-const quizMessage = document.getElementById("quizMessage");
 const commitmentBtn = document.getElementById("commitmentBtn");
 const commitmentMessage = document.getElementById("commitmentMessage");
 const resetBtn = document.getElementById("resetBtn");
@@ -34,7 +32,7 @@ function updateProgress() {
   scoreElement.textContent = score;
   badgeElement.textContent = getBadge();
 
-  let percentage = (score / 120) * 100;
+  let percentage = (score / 100) * 100;
   if (percentage > 100) percentage = 100;
   progressFill.style.width = percentage + "%";
 
@@ -46,14 +44,6 @@ function updateProgress() {
       button.disabled = true;
     }
   });
-
-  if (completedMissions.includes("trivia-ambiental")) {
-    quizOptions.forEach(option => {
-      option.disabled = true;
-      if (option.dataset.correct === "true") option.classList.add("correct");
-    });
-    quizMessage.textContent = "Trivia completada. Ganaste 20 puntos.";
-  }
 
   if (completedMissions.includes("compromiso-ambiental")) {
     commitmentBtn.disabled = true;
@@ -122,26 +112,6 @@ missionButtons.forEach(button => {
     }
 
     completeMission(missionId, points);
-  });
-});
-
-// Trivia
-quizOptions.forEach(option => {
-  option.addEventListener("click", () => {
-    if (completedMissions.includes("trivia-ambiental")) return;
-
-    const isCorrect = option.dataset.correct === "true";
-
-    if (isCorrect) {
-      option.classList.add("correct");
-      quizMessage.textContent = "Respuesta correcta. Ganaste 20 puntos.";
-      completeMission("trivia-ambiental", 20);
-      quizOptions.forEach(btn => btn.disabled = true);
-    } else {
-      option.classList.add("wrong");
-      quizMessage.textContent = "Respuesta incorrecta. Intenta otra opción.";
-      showToast("Aún puedes intentarlo otra vez.");
-    }
   });
 });
 
