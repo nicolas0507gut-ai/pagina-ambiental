@@ -82,9 +82,22 @@ a {
   transform: rotate(-8deg);
 }
 
-.leaf-one { left: 35px; bottom: 95px; }
-.leaf-two { right: 80px; top: 120px; transform: rotate(35deg) scale(1.25); }
-.leaf-three { right: 260px; bottom: 110px; transform: rotate(-10deg) scale(0.8); }
+.leaf-one {
+  left: 35px;
+  bottom: 95px;
+}
+
+.leaf-two {
+  right: 80px;
+  top: 120px;
+  transform: rotate(35deg) scale(1.25);
+}
+
+.leaf-three {
+  right: 260px;
+  bottom: 110px;
+  transform: rotate(-10deg) scale(0.8);
+}
 
 .navbar {
   max-width: 1150px;
@@ -300,6 +313,7 @@ a {
   flex-direction: column;
   justify-content: flex-start;
   height: 100%;
+  color: #123527;
 }
 
 /* Icons y headers */
@@ -412,13 +426,8 @@ a {
   transition: width 0.4s ease;
 }
 
-.mission-card {
-  color: #123527;
-}
-
 .mission-card button,
-#commitmentBtn,
-.reset-btn {
+#commitmentBtn {
   width: 100%;
   margin-top: 18px;
   padding: 13px 16px;
@@ -475,96 +484,6 @@ a {
   display: block;
 }
 
-/* Commitment */
-.commitment {
-  margin: 40px auto 80px;
-  max-width: 900px;
-  background: #123527;
-  color: white;
-  text-align: center;
-  padding: 55px 30px;
-  border-radius: 30px;
-}
-
-.commitment h2 {
-  font-size: 36px;
-  margin-bottom: 15px;
-}
-
-.commitment p {
-  max-width: 650px;
-  margin: auto;
-}
-
-#commitmentBtn {
-  max-width: 260px;
-  margin: 25px auto 0;
-  background: #9be15d;
-  color: #123527;
-}
-
-#commitmentMessage {
-  margin-top: 18px;
-  font-weight: bold;
-  color: #dfffe8;
-}
-
-footer {
-  text-align: center;
-  background: red; /* cambio temporal para probar */
-  color: white;
-  padding: 25px;
-}
-
-#toast {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  background: #123527;
-  color: white;
-  padding: 16px 20px;
-  border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.18);
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.3s ease;
-  z-index: 999;
-}
-
-#toast.show {
-  opacity: 1;
-}
-
-@media (max-width: 900px) {
-  .hero-content {
-    grid-template-columns: 1fr;
-    margin-top: 50px;
-  }
-
-  .hero h1 {
-    font-size: 38px;
-  }
-
-  .nav-links {
-    display: none;
-  }
-
-  .info-grid,
-  .problem-grid,
-  .stats-grid,
-  .missions-grid,
-  .reuse-grid,
-  .impact-list,
-  .progress-panel {
-    grid-template-columns: 1fr;
-  }
-
-  .section-title h2 {
-    font-size: 30px;
-  }
-}
-
-/* rebuild force */
 /* Preguntas diarias */
 .daily-question-card {
   min-height: 280px;
@@ -633,3 +552,94 @@ footer {
   color: #496558;
   font-weight: bold;
 }
+
+/* Commitment */
+.commitment {
+  margin: 40px auto 80px;
+  max-width: 900px;
+  background: #123527;
+  color: white;
+  text-align: center;
+  padding: 55px 30px;
+  border-radius: 30px;
+}
+
+.commitment h2 {
+  font-size: 36px;
+  margin-bottom: 15px;
+}
+
+.commitment p {
+  max-width: 650px;
+  margin: auto;
+}
+
+#commitmentBtn {
+  max-width: 260px;
+  margin: 25px auto 0;
+  background: #9be15d;
+  color: #123527;
+}
+
+#commitmentMessage {
+  margin-top: 18px;
+  font-weight: bold;
+  color: #dfffe8;
+}
+
+footer {
+  text-align: center;
+  background: #0b4d36;
+  color: white;
+  padding: 25px;
+}
+
+#toast {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: #123527;
+  color: white;
+  padding: 16px 20px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s ease;
+  z-index: 999;
+}
+
+#toast.show {
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    margin-top: 50px;
+  }
+
+  .hero h1 {
+    font-size: 38px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .info-grid,
+  .problem-grid,
+  .stats-grid,
+  .missions-grid,
+  .reuse-grid,
+  .impact-list,
+  .progress-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .section-title h2 {
+    font-size: 30px;
+  }
+}
+
+/* rebuild force */
