@@ -5,7 +5,6 @@ const progressFill = document.getElementById("progressFill");
 const missionButtons = document.querySelectorAll(".mission-btn");
 const commitmentBtn = document.getElementById("commitmentBtn");
 const commitmentMessage = document.getElementById("commitmentMessage");
-const resetBtn = document.getElementById("resetBtn");
 const toast = document.getElementById("toast");
 const photoInputs = document.querySelectorAll(".mission-photo");
 
@@ -127,6 +126,7 @@ function updateProgress() {
 
   missionButtons.forEach(button => {
     const missionId = button.dataset.id;
+
     if (completedMissions.includes(missionId)) {
       button.textContent = "Misión completada";
       button.classList.add("completed");
@@ -178,11 +178,13 @@ photoInputs.forEach(input => {
     }
 
     const reader = new FileReader();
+
     reader.onload = function(event) {
       preview.src = event.target.result;
       preview.classList.add("show");
       showToast("Foto cargada correctamente.");
     };
+
     reader.readAsDataURL(file);
   });
 });
@@ -219,7 +221,7 @@ function getRemainingTime(lastAnsweredAt) {
   return `${hours} h ${minutes} min`;
 }
 
-// Función para elegir una pregunta diferente
+// Función para elegir una pregunta diferente a la anterior
 function getQuestionIndex(type, lastIndex) {
   const questions = dailyQuestions[type];
 
@@ -234,6 +236,12 @@ function getQuestionIndex(type, lastIndex) {
   return newIndex;
 }
 
+// Función para bloquear opciones después de responder
+function blockDailyOptions(optionsElement) {
+  const allButtons = optionsElement.querySelectorAll(".daily-option");
+  allButtons.forEach(btn => btn.disabled = true);
+}
+
 // Configuración de pregunta diaria
 function setupDailyQuestion(type, questionId, optionsId, messageId, cooldownId) {
   const questionElement = document.getElementById(questionId);
@@ -242,9 +250,11 @@ function setupDailyQuestion(type, questionId, optionsId, messageId, cooldownId) 
   const cooldownElement = document.getElementById(cooldownId);
 
   const storageKey = `eco_daily_${type}`;
+
   const savedData = JSON.parse(localStorage.getItem(storageKey)) || {
     lastAnsweredAt: 0,
-    lastQuestionIndex: -1
+    lastQuestionIndex: -1,
+    lastWasCorrect: null
   };
 
   const remainingTime = getRemainingTime(savedData.lastAnsweredAt);
@@ -255,15 +265,29 @@ function setupDailyQuestion(type, questionId, optionsId, messageId, cooldownId) 
     questionElement.textContent = question.question;
     optionsElement.innerHTML = "";
 
-    question.options.forEach(optionText => {
+    question.options.forEach((optionText, index) => {
       const button = document.createElement("button");
       button.className = "daily-option";
       button.textContent = optionText;
       button.disabled = true;
+
+      if (savedData.selectedOption === index) {
+        if (savedData.lastWasCorrect) {
+          button.classList.add("correct");
+        } else {
+          button.classList.add("wrong");
+        }
+      }
+
       optionsElement.appendChild(button);
     });
 
-    messageElement.textContent = "Ya respondiste correctamente esta pregunta.";
+    if (savedData.lastWasCorrect) {
+      messageElement.textContent = "Respuesta correcta. Ya ganaste puntos por esta pregunta.";
+    } else {
+      messageElement.textContent = "Respuesta incorrecta. Perdiste esta oportunidad.";
+    }
+
     cooldownElement.textContent = "Podrás responder otra pregunta en: " + remainingTime;
     return;
   }
@@ -274,7 +298,7 @@ function setupDailyQuestion(type, questionId, optionsId, messageId, cooldownId) 
   questionElement.textContent = question.question;
   optionsElement.innerHTML = "";
   messageElement.textContent = "";
-  cooldownElement.textContent = "Disponible ahora. Responde bien para ganar puntos.";
+  cooldownElement.textContent = "Disponible ahora. Solo tienes una oportunidad.";
 
   question.options.forEach((optionText, index) => {
     const button = document.createElement("button");
@@ -282,31 +306,33 @@ function setupDailyQuestion(type, questionId, optionsId, messageId, cooldownId) 
     button.textContent = optionText;
 
     button.addEventListener("click", () => {
-      if (index === question.correct) {
+      const isCorrect = index === question.correct;
+
+      const newData = {
+        lastAnsweredAt: Date.now(),
+        lastQuestionIndex: questionIndex,
+        lastWasCorrect: isCorrect,
+        selectedOption: index
+      };
+
+      localStorage.setItem(storageKey, JSON.stringify(newData));
+
+      if (isCorrect) {
         button.classList.add("correct");
         score += question.points;
-
-        const newData = {
-          lastAnsweredAt: Date.now(),
-          lastQuestionIndex: questionIndex
-        };
-
-        localStorage.setItem(storageKey, JSON.stringify(newData));
         saveProgress();
         updateProgress();
 
         messageElement.textContent = "Respuesta correcta. Ganaste " + question.points + " puntos extra.";
-        cooldownElement.textContent = "Vuelve en 24 horas para una nueva pregunta.";
-
-        const allButtons = optionsElement.querySelectorAll(".daily-option");
-        allButtons.forEach(btn => btn.disabled = true);
-
         showToast("Ganaste " + question.points + " puntos extra.");
       } else {
         button.classList.add("wrong");
-        messageElement.textContent = "Respuesta incorrecta. Intenta con otra opción.";
-        showToast("Respuesta incorrecta. Intenta otra vez.");
+        messageElement.textContent = "Respuesta incorrecta. Perdiste tu oportunidad.";
+        showToast("Respuesta incorrecta. Vuelve a intentarlo mañana.");
       }
+
+      cooldownElement.textContent = "Vuelve en 24 horas para una nueva pregunta.";
+      blockDailyOptions(optionsElement);
     });
 
     optionsElement.appendChild(button);
@@ -334,17 +360,6 @@ setupDailyQuestion(
 commitmentBtn.addEventListener("click", () => {
   completeMission("compromiso-ambiental", 15);
   commitmentMessage.textContent = "Gracias por ser parte del cambio en Florencia de Mora.";
-});
-
-// Reinicio de progreso
-resetBtn.addEventListener("click", () => {
-  if (confirm("¿Seguro que quieres reiniciar tu progreso?")) {
-    localStorage.removeItem("eco_score");
-    localStorage.removeItem("eco_completed_missions");
-    localStorage.removeItem("eco_daily_consejo");
-    localStorage.removeItem("eco_daily_entorno");
-    location.reload();
-  }
 });
 
 // Inicializar
