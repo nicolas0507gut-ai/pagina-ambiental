@@ -206,6 +206,7 @@
       </div>
 
       <div class="missions-grid">
+
         <article class="mission-card">
           <h3>Separar residuos</h3>
           <p>Separa botellas, envolturas o plásticos limpios en una bolsa durante un día.</p>
@@ -258,21 +259,34 @@
           </button>
         </article>
 
-        <article class="mission-card">
+        <article class="mission-card daily-question-card">
           <h3>Consejo ambiental</h3>
-          <p>Comparte con un familiar una recomendación para no arrojar basura en la calle.</p>
-          <button class="mission-btn" data-id="consejo-ambiental" data-points="15">
-            Completar misión +15
-          </button>
+          <p class="daily-intro">
+            Responde correctamente una pregunta sobre buenas prácticas ambientales y gana puntos extra.
+          </p>
+
+          <div class="daily-question-box">
+            <p id="consejoQuestion" class="daily-question"></p>
+            <div id="consejoOptions" class="daily-options"></div>
+            <p id="consejoMessage" class="daily-message"></p>
+            <p id="consejoCooldown" class="daily-cooldown"></p>
+          </div>
         </article>
 
-        <article class="mission-card">
+        <article class="mission-card daily-question-card">
           <h3>Observa tu entorno</h3>
-          <p>Identifica desde casa o en tu ruta diaria una zona con polvo o residuos acumulados.</p>
-          <button class="mission-btn" data-id="observa-entorno" data-points="10">
-            Completar misión +10
-          </button>
+          <p class="daily-intro">
+            Responde una pregunta sobre los problemas ambientales de Florencia de Mora y gana puntos extra.
+          </p>
+
+          <div class="daily-question-box">
+            <p id="entornoQuestion" class="daily-question"></p>
+            <div id="entornoOptions" class="daily-options"></div>
+            <p id="entornoMessage" class="daily-message"></p>
+            <p id="entornoCooldown" class="daily-cooldown"></p>
+          </div>
         </article>
+
       </div>
 
       <button id="resetBtn" class="reset-btn">Reiniciar progreso</button>
