@@ -19,7 +19,10 @@ a {
   text-decoration: none;
 }
 
-/* Hero / Inicio */
+.hidden {
+  display: none !important;
+}
+
 .hero {
   min-height: 100vh;
   position: relative;
@@ -39,8 +42,7 @@ a {
   height: 520px;
   left: -170px;
   bottom: -170px;
-  background:
-    radial-gradient(circle, rgba(45, 132, 75, 0.24) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(45, 132, 75, 0.24) 0%, transparent 65%);
   border-radius: 50%;
   z-index: 0;
 }
@@ -52,13 +54,11 @@ a {
   height: 420px;
   right: -120px;
   top: 120px;
-  background:
-    radial-gradient(circle, rgba(22, 133, 78, 0.18) 0%, transparent 68%);
+  background: radial-gradient(circle, rgba(22, 133, 78, 0.18) 0%, transparent 68%);
   border-radius: 50%;
   z-index: 0;
 }
 
-/* hojas decorativas */
 .leaf {
   position: absolute;
   width: 110px;
@@ -68,7 +68,6 @@ a {
   opacity: 0.28;
   z-index: 1;
   transform: rotate(-25deg);
-  filter: blur(0.2px);
 }
 
 .leaf::after {
@@ -105,6 +104,7 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 18px;
   padding: 15px 0;
   position: relative;
   z-index: 2;
@@ -128,6 +128,32 @@ a {
 
 .nav-links a:hover {
   color: #16854e;
+}
+
+.auth-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#userStatus {
+  font-size: 14px;
+  font-weight: bold;
+  color: #0b4d36;
+}
+
+.auth-btn {
+  border: none;
+  background: #16854e;
+  color: white;
+  font-weight: bold;
+  padding: 10px 14px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.auth-btn:hover {
+  background: #0b4d36;
 }
 
 .hero-content {
@@ -217,7 +243,6 @@ a {
   color: #315846;
 }
 
-/* Secciones */
 .section {
   max-width: 1150px;
   margin: auto;
@@ -262,12 +287,126 @@ a {
   color: white;
 }
 
-/* Grid */
+.auth-section {
+  padding-top: 40px;
+}
+
+.auth-card {
+  background: white;
+  border-radius: 28px;
+  padding: 30px;
+  box-shadow: 0 18px 45px rgba(21, 77, 53, 0.12);
+  max-width: 720px;
+  margin: auto;
+}
+
+.auth-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.auth-header span {
+  color: #16854e;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.auth-header h2 {
+  font-size: 30px;
+  margin: 8px 0;
+}
+
+.auth-header p {
+  color: #496558;
+}
+
+.close-auth {
+  width: 38px;
+  height: 38px;
+  border: none;
+  background: #e8f8ed;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  color: #123527;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  flex: 1;
+  border: none;
+  padding: 13px;
+  border-radius: 14px;
+  background: #e8f8ed;
+  font-weight: bold;
+  color: #123527;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background: #16854e;
+  color: white;
+}
+
+.auth-form {
+  display: grid;
+  gap: 12px;
+}
+
+.auth-form label {
+  font-weight: bold;
+  color: #123527;
+}
+
+.auth-form input {
+  padding: 13px 15px;
+  border: 1px solid #cfe4d4;
+  border-radius: 14px;
+  font-size: 15px;
+}
+
+.auth-form button {
+  margin-top: 8px;
+  border: none;
+  padding: 14px;
+  border-radius: 14px;
+  background: #16854e;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.auth-form button:hover {
+  background: #0b4d36;
+}
+
+#authMessage {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+#authMessage.error {
+  color: #c0392b;
+}
+
+#authMessage.success {
+  color: #16854e;
+}
+
 .info-grid,
 .problem-grid,
 .stats-grid,
 .missions-grid,
-.reuse-grid {
+.reuse-grid,
+.dashboard-grid {
   display: grid;
   gap: 24px;
 }
@@ -285,9 +424,7 @@ a {
 }
 
 .missions-grid {
-  display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
   align-items: start;
 }
 
@@ -295,19 +432,83 @@ a {
   grid-template-columns: repeat(4, 1fr);
 }
 
-/* Cards */
+.dashboard-grid {
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 28px;
+}
+
 .info-card,
 .problem-card,
 .stat-card,
 .mission-card,
-.reuse-grid article {
+.reuse-grid article,
+.dashboard-card,
+.evidence-panel {
   background: white;
   border-radius: 22px;
   padding: 26px;
   box-shadow: 0 10px 25px rgba(21, 77, 53, 0.08);
 }
 
-/* Altura uniforme para misiones */
+.dashboard-card {
+  text-align: center;
+  border-top: 6px solid #16854e;
+}
+
+.dashboard-card h3 {
+  color: #16854e;
+  font-size: 28px;
+}
+
+.evidence-panel h3 {
+  margin-bottom: 18px;
+}
+
+.submission-list {
+  display: grid;
+  gap: 14px;
+}
+
+.submission-item {
+  border: 1px solid #d9eadf;
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  background: #f8fcf9;
+}
+
+.submission-item h4 {
+  margin-bottom: 6px;
+}
+
+.view-photo-btn {
+  background: #16854e;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.pendiente {
+  color: #d18b00;
+}
+
+.aprobado {
+  color: #16854e;
+}
+
+.rechazado {
+  color: #c0392b;
+}
+
+.empty-text {
+  color: #658173;
+  font-weight: bold;
+}
+
 .mission-card {
   display: flex;
   flex-direction: column;
@@ -316,7 +517,6 @@ a {
   color: #123527;
 }
 
-/* Icons y headers */
 .icon {
   font-size: 38px;
   margin-bottom: 15px;
@@ -373,7 +573,6 @@ a {
   margin-bottom: 10px;
 }
 
-/* Missions */
 .missions-section {
   max-width: none;
   background: linear-gradient(135deg, #0b4d36, #16854e);
@@ -426,8 +625,9 @@ a {
   transition: width 0.4s ease;
 }
 
-.mission-card button,
-#commitmentBtn {
+.submit-evidence-btn,
+#commitmentBtn,
+.refresh-btn {
   width: 100%;
   margin-top: 18px;
   padding: 13px 16px;
@@ -440,18 +640,20 @@ a {
   transition: 0.2s ease;
 }
 
-.mission-card button:hover,
-#commitmentBtn:hover {
+.submit-evidence-btn:hover,
+#commitmentBtn:hover,
+.refresh-btn:hover {
   background: #0b4d36;
   transform: translateY(-2px);
 }
 
-.mission-card button.completed {
+.submit-evidence-btn.completed,
+.submit-evidence-btn:disabled {
   background: #a8b7ad;
   cursor: not-allowed;
+  transform: none;
 }
 
-/* File upload */
 .upload-box {
   display: block;
   margin-top: 18px;
@@ -484,7 +686,25 @@ a {
   display: block;
 }
 
-/* Preguntas diarias */
+.submission-status {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #496558;
+  font-weight: bold;
+}
+
+.submission-status.pending {
+  color: #d18b00;
+}
+
+.submission-status.approved {
+  color: #16854e;
+}
+
+.submission-status.rejected {
+  color: #c0392b;
+}
+
 .daily-question-card {
   min-height: 280px;
 }
@@ -553,7 +773,83 @@ a {
   font-weight: bold;
 }
 
-/* Commitment */
+.admin-panel {
+  background: #f4fbf6;
+}
+
+.refresh-btn {
+  max-width: 330px;
+  margin: 0 auto 25px;
+  display: block;
+}
+
+.admin-list {
+  display: grid;
+  gap: 20px;
+}
+
+.admin-item {
+  background: white;
+  border-radius: 24px;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 0.8fr;
+  gap: 20px;
+  box-shadow: 0 10px 25px rgba(21, 77, 53, 0.08);
+  align-items: center;
+}
+
+.admin-info h3 {
+  color: #123527;
+  margin-bottom: 8px;
+}
+
+.admin-photo img {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 3px solid #dff6d8;
+}
+
+.admin-photo a {
+  display: inline-block;
+  margin-top: 10px;
+  color: #16854e;
+  font-weight: bold;
+}
+
+.admin-actions {
+  display: grid;
+  gap: 12px;
+}
+
+.approve-btn,
+.reject-btn {
+  border: none;
+  padding: 13px;
+  border-radius: 14px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.approve-btn {
+  background: #16854e;
+}
+
+.reject-btn {
+  background: #c0392b;
+}
+
+.approve-btn:hover {
+  background: #0b4d36;
+}
+
+.reject-btn:hover {
+  background: #922b21;
+}
+
 .commitment {
   margin: 40px auto 80px;
   max-width: 900px;
@@ -614,6 +910,10 @@ footer {
 }
 
 @media (max-width: 900px) {
+  .navbar {
+    flex-wrap: wrap;
+  }
+
   .hero-content {
     grid-template-columns: 1fr;
     margin-top: 50px;
@@ -633,13 +933,18 @@ footer {
   .missions-grid,
   .reuse-grid,
   .impact-list,
-  .progress-panel {
+  .progress-panel,
+  .dashboard-grid,
+  .admin-item {
     grid-template-columns: 1fr;
   }
 
   .section-title h2 {
     font-size: 30px;
   }
-}
 
-/* rebuild force */
+  .auth-nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
