@@ -9,18 +9,24 @@
 <body>
 
   <header class="hero" id="inicio">
-    <!-- hojas decorativas -->
     <div class="leaf leaf-one"></div>
     <div class="leaf leaf-two"></div>
     <div class="leaf leaf-three"></div>
 
     <nav class="navbar">
       <div class="logo">EcoFlorencia</div>
+
       <div class="nav-links">
         <a href="#problema">Problema</a>
         <a href="#consecuencias">Consecuencias</a>
         <a href="#misiones">Misiones</a>
         <a href="#reutiliza">Reutiliza</a>
+      </div>
+
+      <div class="auth-nav">
+        <span id="userStatus">Visitante</span>
+        <button id="openAuthBtn" class="auth-btn">Iniciar sesión</button>
+        <button id="logoutBtn" class="auth-btn hidden">Cerrar sesión</button>
       </div>
     </nav>
 
@@ -48,6 +54,86 @@
   </header>
 
   <main>
+
+    <section id="authSection" class="section auth-section hidden">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div>
+            <span>Acceso de usuario</span>
+            <h2>Inicia sesión para guardar tu progreso</h2>
+            <p>
+              Puedes revisar la información sin cuenta, pero para enviar evidencias,
+              ganar puntos o responder preguntas debes iniciar sesión.
+            </p>
+          </div>
+          <button id="closeAuthBtn" class="close-auth">×</button>
+        </div>
+
+        <div class="auth-tabs">
+          <button id="showLoginBtn" class="tab-btn active">Iniciar sesión</button>
+          <button id="showRegisterBtn" class="tab-btn">Crear cuenta</button>
+        </div>
+
+        <div id="loginForm" class="auth-form">
+          <label>Correo electrónico</label>
+          <input type="email" id="loginEmail" placeholder="correo@ejemplo.com">
+
+          <label>Contraseña</label>
+          <input type="password" id="loginPassword" placeholder="Ingresa tu contraseña">
+
+          <button id="loginBtn">Ingresar</button>
+        </div>
+
+        <div id="registerForm" class="auth-form hidden">
+          <label>Nombre</label>
+          <input type="text" id="registerName" placeholder="Tu nombre">
+
+          <label>Correo electrónico</label>
+          <input type="email" id="registerEmail" placeholder="correo@ejemplo.com">
+
+          <label>Contraseña</label>
+          <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres">
+
+          <button id="registerBtn">Crear cuenta</button>
+        </div>
+
+        <p id="authMessage"></p>
+      </div>
+    </section>
+
+    <section id="userDashboard" class="section user-dashboard hidden">
+      <div class="section-title">
+        <span>Mi progreso</span>
+        <h2>Resumen de participación</h2>
+        <p>
+          Aquí se muestra tu puntaje y el estado de las evidencias que enviaste.
+        </p>
+      </div>
+
+      <div class="dashboard-grid">
+        <article class="dashboard-card">
+          <h3 id="dashboardName">Usuario</h3>
+          <p>Cuenta activa</p>
+        </article>
+
+        <article class="dashboard-card">
+          <h3 id="dashboardPoints">0</h3>
+          <p>Puntos aprobados</p>
+        </article>
+
+        <article class="dashboard-card">
+          <h3 id="dashboardRole">Usuario</h3>
+          <p>Rol dentro del sistema</p>
+        </article>
+      </div>
+
+      <div class="evidence-panel">
+        <h3>Mis evidencias</h3>
+        <div id="mySubmissionsList" class="submission-list">
+          <p class="empty-text">Aún no enviaste evidencias.</p>
+        </div>
+      </div>
+    </section>
 
     <section class="section" id="problema">
       <div class="section-title">
@@ -182,7 +268,8 @@
         <span>Participa desde casa</span>
         <h2>Misiones ambientales</h2>
         <p>
-          Completa acciones pequeñas, gana puntos y desbloquea insignias ambientales.
+          Las misiones con foto no dan puntos automáticamente. Primero debes enviar tu evidencia
+          y luego el administrador la revisará manualmente.
         </p>
       </div>
 
@@ -207,56 +294,76 @@
 
       <div class="missions-grid">
 
-        <article class="mission-card">
+        <article class="mission-card" data-mission-card="separar-residuos">
           <h3>Separar residuos</h3>
           <p>Separa botellas, envolturas o plásticos limpios en una bolsa durante un día.</p>
+
           <label class="upload-box">
             Subir foto de evidencia
             <input type="file" accept="image/*" class="mission-photo" data-preview="preview-separar">
           </label>
+
           <img id="preview-separar" class="photo-preview" alt="Vista previa de evidencia">
-          <button class="mission-btn" data-id="separar-residuos" data-points="10">
-            Completar misión +10
+
+          <button class="submit-evidence-btn" data-id="separar-residuos">
+            Enviar para verificación
           </button>
+
+          <p id="status-separar-residuos" class="submission-status"></p>
         </article>
 
-        <article class="mission-card">
+        <article class="mission-card" data-mission-card="maceta-reciclada">
           <h3>Maceta reciclada</h3>
           <p>Convierte una botella o envase plástico en una maceta pequeña para casa.</p>
+
           <label class="upload-box">
             Subir foto de evidencia
             <input type="file" accept="image/*" class="mission-photo" data-preview="preview-maceta">
           </label>
+
           <img id="preview-maceta" class="photo-preview" alt="Vista previa de evidencia">
-          <button class="mission-btn" data-id="maceta-reciclada" data-points="25">
-            Completar misión +25
+
+          <button class="submit-evidence-btn" data-id="maceta-reciclada">
+            Enviar para verificación
           </button>
+
+          <p id="status-maceta-reciclada" class="submission-status"></p>
         </article>
 
-        <article class="mission-card">
+        <article class="mission-card" data-mission-card="reducir-bolsa">
           <h3>Reducir una bolsa</h3>
           <p>Evita usar una bolsa plástica innecesaria o reutiliza una que ya tengas.</p>
+
           <label class="upload-box">
             Subir foto de evidencia
             <input type="file" accept="image/*" class="mission-photo" data-preview="preview-bolsa">
           </label>
+
           <img id="preview-bolsa" class="photo-preview" alt="Vista previa de evidencia">
-          <button class="mission-btn" data-id="reducir-bolsa" data-points="10">
-            Completar misión +10
+
+          <button class="submit-evidence-btn" data-id="reducir-bolsa">
+            Enviar para verificación
           </button>
+
+          <p id="status-reducir-bolsa" class="submission-status"></p>
         </article>
 
-        <article class="mission-card">
+        <article class="mission-card" data-mission-card="guardar-reciclables">
           <h3>Guardar reciclables</h3>
           <p>Lava y guarda una botella, lata o envase que pueda reutilizarse.</p>
+
           <label class="upload-box">
             Subir foto de evidencia
             <input type="file" accept="image/*" class="mission-photo" data-preview="preview-guardar">
           </label>
+
           <img id="preview-guardar" class="photo-preview" alt="Vista previa de evidencia">
-          <button class="mission-btn" data-id="guardar-reciclables" data-points="15">
-            Completar misión +15
+
+          <button class="submit-evidence-btn" data-id="guardar-reciclables">
+            Enviar para verificación
           </button>
+
+          <p id="status-guardar-reciclables" class="submission-status"></p>
         </article>
 
         <article class="mission-card daily-question-card">
@@ -287,6 +394,23 @@
           </div>
         </article>
 
+      </div>
+    </section>
+
+    <section id="adminPanel" class="section admin-panel hidden">
+      <div class="section-title">
+        <span>Panel de administrador</span>
+        <h2>Revisión manual de evidencias</h2>
+        <p>
+          Aquí podrás revisar las fotos enviadas por los usuarios y decidir si apruebas
+          o rechazas los puntos.
+        </p>
+      </div>
+
+      <button id="refreshAdminBtn" class="refresh-btn">Actualizar evidencias pendientes</button>
+
+      <div id="adminSubmissionsList" class="admin-list">
+        <p class="empty-text">No hay evidencias pendientes.</p>
       </div>
     </section>
 
@@ -342,6 +466,7 @@
 
   <div id="toast"></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
 </body>
 </html>
