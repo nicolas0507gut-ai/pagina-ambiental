@@ -27,7 +27,10 @@ const loginBtn = document.getElementById("loginBtn");
 const registerName = document.getElementById("registerName");
 const registerEmail = document.getElementById("registerEmail");
 const registerPassword = document.getElementById("registerPassword");
+const registerPasswordConfirm = document.getElementById("registerPasswordConfirm");
 const registerBtn = document.getElementById("registerBtn");
+
+const passwordToggleButtons = document.querySelectorAll(".toggle-password");
 
 const userDashboard = document.getElementById("userDashboard");
 const dashboardName = document.getElementById("dashboardName");
@@ -155,6 +158,25 @@ function hideAuth() {
 function setAuthMessage(message, type = "") {
   authMessage.textContent = message;
   authMessage.className = type;
+}
+
+function setupPasswordToggles() {
+  passwordToggleButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      const targetId = button.dataset.target;
+      const input = document.getElementById(targetId);
+
+      if (!input) return;
+
+      if (input.type === "password") {
+        input.type = "text";
+        button.textContent = "Ocultar";
+      } else {
+        input.type = "password";
+        button.textContent = "Ver";
+      }
+    });
+  });
 }
 
 function getBadge(points) {
@@ -409,14 +431,20 @@ async function handleRegister() {
   const nombre = registerName.value.trim();
   const email = registerEmail.value.trim();
   const password = registerPassword.value.trim();
+  const confirmPassword = registerPasswordConfirm.value.trim();
 
-  if (!nombre || !email || !password) {
+  if (!nombre || !email || !password || !confirmPassword) {
     setAuthMessage("Completa todos los campos para crear tu cuenta.", "error");
     return;
   }
 
   if (password.length < 6) {
     setAuthMessage("La contraseña debe tener como mínimo 6 caracteres.", "error");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    setAuthMessage("Las contraseñas no coinciden. Vuelve a revisar los campos.", "error");
     return;
   }
 
@@ -443,6 +471,11 @@ async function handleRegister() {
   }
 
   setAuthMessage("Cuenta creada correctamente. Ya puedes iniciar sesión.", "success");
+
+  registerName.value = "";
+  registerEmail.value = "";
+  registerPassword.value = "";
+  registerPasswordConfirm.value = "";
 
   if (data.session) {
     currentUser = data.session.user;
@@ -897,6 +930,8 @@ showRegisterBtn.addEventListener("click", () => {
 refreshAdminBtn.addEventListener("click", loadAdminSubmissions);
 
 async function initApp() {
+  setupPasswordToggles();
+
   const { data } = await db.auth.getSession();
 
   if (data.session) {
