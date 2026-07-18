@@ -199,6 +199,12 @@ function setupDniInput() {
   });
 }
 
+function setupEmailInput() {
+  registerEmail.addEventListener("input", () => {
+    setAuthMessage("");
+  });
+}
+
 function getBadge(points) {
   if (points >= 100) return "Protector de Florencia";
   if (points >= 60) return "Guardián Ambiental";
@@ -237,6 +243,27 @@ function requireLogin() {
   return true;
 }
 
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+async function validarDisponibilidadRegistro(dni = null, email = null) {
+  const { data, error } = await db.rpc("validar_registro_disponible", {
+    p_dni: dni,
+    p_email: email
+  });
+
+  if (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "No se pudo validar si el DNI o correo ya existen."
+    };
+  }
+
+  return data;
+}
+
 async function searchDni() {
   const dni = registerDni.value.trim();
 
@@ -250,6 +277,25 @@ async function searchDni() {
   }
 
   searchDniBtn.disabled = true;
+  searchDniBtn.textContent = "Validando...";
+  setDniMessage("Verificando si el DNI ya está registrado...", "loading");
+
+  const disponibilidad = await validarDisponibilidadRegistro(dni, null);
+
+  if (!disponibilidad || disponibilidad.success === false) {
+    searchDniBtn.disabled = false;
+    searchDniBtn.textContent = "Buscar DNI";
+    setDniMessage(disponibilidad?.message || "No se pudo validar el DNI.", "error");
+    return;
+  }
+
+  if (disponibilidad.dni_existe) {
+    searchDniBtn.disabled = false;
+    searchDniBtn.textContent = "Buscar DNI";
+    setDniMessage("Este DNI ya está registrado. Usa otro DNI o inicia sesión.", "error");
+    return;
+  }
+
   searchDniBtn.textContent = "Buscando...";
   setDniMessage("Consultando datos del DNI...", "loading");
 
@@ -498,7 +544,7 @@ async function refreshUserData() {
 async function handleRegister() {
   const dni = registerDni.value.trim();
   const nombre = registerName.value.trim();
-  const email = registerEmail.value.trim();
+  const email = registerEmail.value.trim().toLowerCase();
   const password = registerPassword.value.trim();
   const confirmPassword = registerPasswordConfirm.value.trim();
 
@@ -507,8 +553,18 @@ async function handleRegister() {
     return;
   }
 
+  if (!/^[0-9]{8}$/.test(dni)) {
+    setAuthMessage("El DNI debe tener exactamente 8 números.", "error");
+    return;
+  }
+
   if (!dniData || dniData.dni !== dni) {
     setAuthMessage("Primero debes buscar y validar tu DNI.", "error");
+    return;
+  }
+
+  if (!isValidEmail(email)) {
+    setAuthMessage("Ingresa un correo válido.", "error");
     return;
   }
 
@@ -523,6 +579,31 @@ async function handleRegister() {
   }
 
   registerBtn.disabled = true;
+  registerBtn.textContent = "Validando datos...";
+
+  const disponibilidad = await validarDisponibilidadRegistro(dni, email);
+
+  if (!disponibilidad || disponibilidad.success === false) {
+    registerBtn.disabled = false;
+    registerBtn.textContent = "Crear cuenta";
+    setAuthMessage(disponibilidad?.message || "No se pudo validar el registro.", "error");
+    return;
+  }
+
+  if (disponibilidad.dni_existe) {
+    registerBtn.disabled = false;
+    registerBtn.textContent = "Crear cuenta";
+    setAuthMessage("Este DNI ya está registrado. No se puede crear otra cuenta con el mismo DNI.", "error");
+    return;
+  }
+
+  if (disponibilidad.email_existe) {
+    registerBtn.disabled = false;
+    registerBtn.textContent = "Crear cuenta";
+    setAuthMessage("Este correo ya está registrado. Usa otro correo o inicia sesión.", "error");
+    return;
+  }
+
   registerBtn.textContent = "Creando cuenta...";
 
   const { data, error } = await db.auth.signUp({
@@ -547,8 +628,10 @@ async function handleRegister() {
   if (error) {
     console.error(error);
 
-    if (error.message && error.message.toLowerCase().includes("database")) {
-      setAuthMessage("No se pudo crear la cuenta. Es posible que este DNI ya esté registrado.", "error");
+    if (error.message && error.message.toLowerCase().includes("already registered")) {
+      setAuthMessage("Este correo ya está registrado. Usa otro correo o inicia sesión.", "error");
+    } else if (error.message && error.message.toLowerCase().includes("database")) {
+      setAuthMessage("No se pudo crear la cuenta. Es posible que el DNI o correo ya estén registrados.", "error");
     } else {
       setAuthMessage(error.message, "error");
     }
@@ -1015,6 +1098,7 @@ refreshAdminBtn.addEventListener("click", loadAdminSubmissions);
 async function initApp() {
   setupPasswordToggles();
   setupDniInput();
+  setupEmailInput();
 
   const { data } = await db.auth.getSession();
 
