@@ -88,8 +88,27 @@
         </div>
 
         <div id="registerForm" class="auth-form hidden">
-          <label>Nombre</label>
-          <input type="text" id="registerName" placeholder="Tu nombre">
+          <label>DNI</label>
+          <div class="dni-wrapper">
+            <input
+              type="text"
+              id="registerDni"
+              placeholder="Ingresa tu DNI"
+              maxlength="8"
+              inputmode="numeric"
+            >
+            <button type="button" id="searchDniBtn">Buscar DNI</button>
+          </div>
+
+          <p id="dniMessage" class="dni-message"></p>
+
+          <label>Nombre completo</label>
+          <input
+            type="text"
+            id="registerName"
+            placeholder="Se completará automáticamente"
+            readonly
+          >
 
           <label>Correo electrónico</label>
           <input type="email" id="registerEmail" placeholder="correo@ejemplo.com">
@@ -457,16 +476,6 @@
           <p>Puede transformarse en portalápices o recipiente decorativo.</p>
         </article>
       </div>
-    </section>
-
-    <section class="commitment">
-      <h2>Compromiso ambiental</h2>
-      <p>
-        Hoy me comprometo a realizar una pequeña acción para cuidar mi casa,
-        mi calle y Florencia de Mora.
-      </p>
-      <button id="commitmentBtn">Aceptar compromiso</button>
-      <p id="commitmentMessage"></p>
     </section>
 
   </main>
