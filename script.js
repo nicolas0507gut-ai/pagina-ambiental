@@ -24,6 +24,9 @@ const loginEmail = document.getElementById("loginEmail");
 const loginPassword = document.getElementById("loginPassword");
 const loginBtn = document.getElementById("loginBtn");
 
+const registerDni = document.getElementById("registerDni");
+const searchDniBtn = document.getElementById("searchDniBtn");
+const dniMessage = document.getElementById("dniMessage");
 const registerName = document.getElementById("registerName");
 const registerEmail = document.getElementById("registerEmail");
 const registerPassword = document.getElementById("registerPassword");
@@ -45,12 +48,10 @@ const adminPanel = document.getElementById("adminPanel");
 const adminSubmissionsList = document.getElementById("adminSubmissionsList");
 const refreshAdminBtn = document.getElementById("refreshAdminBtn");
 
-const commitmentBtn = document.getElementById("commitmentBtn");
-const commitmentMessage = document.getElementById("commitmentMessage");
-
 let currentUser = null;
 let currentProfile = null;
 let mySubmissions = [];
+let dniData = null;
 
 const dailyQuestions = {
   consejo: [
@@ -160,6 +161,11 @@ function setAuthMessage(message, type = "") {
   authMessage.className = type;
 }
 
+function setDniMessage(message, type = "") {
+  dniMessage.textContent = message;
+  dniMessage.className = "dni-message " + type;
+}
+
 function setupPasswordToggles() {
   passwordToggleButtons.forEach(button => {
     button.addEventListener("click", () => {
@@ -176,6 +182,20 @@ function setupPasswordToggles() {
         button.textContent = "Ver";
       }
     });
+  });
+}
+
+function setupDniInput() {
+  registerDni.addEventListener("input", () => {
+    registerDni.value = registerDni.value.replace(/\D/g, "").slice(0, 8);
+    registerName.value = "";
+    dniData = null;
+
+    if (registerDni.value.length > 0 && registerDni.value.length < 8) {
+      setDniMessage("El DNI debe tener 8 números.", "error");
+    } else {
+      setDniMessage("");
+    }
   });
 }
 
@@ -215,6 +235,54 @@ function requireLogin() {
     return false;
   }
   return true;
+}
+
+async function searchDni() {
+  const dni = registerDni.value.trim();
+
+  registerName.value = "";
+  dniData = null;
+  setAuthMessage("");
+
+  if (!/^[0-9]{8}$/.test(dni)) {
+    setDniMessage("Ingresa un DNI válido de 8 números.", "error");
+    return;
+  }
+
+  searchDniBtn.disabled = true;
+  searchDniBtn.textContent = "Buscando...";
+  setDniMessage("Consultando datos del DNI...", "loading");
+
+  const { data, error } = await db.functions.invoke("consultar-dni", {
+    body: {
+      dni: dni
+    }
+  });
+
+  searchDniBtn.disabled = false;
+  searchDniBtn.textContent = "Buscar DNI";
+
+  if (error) {
+    console.error(error);
+    setDniMessage("No se pudo consultar el DNI. Intenta nuevamente.", "error");
+    return;
+  }
+
+  if (!data || !data.success || !data.data) {
+    setDniMessage(data?.message || "No se encontraron datos para este DNI.", "error");
+    return;
+  }
+
+  dniData = data.data;
+  registerName.value = dniData.nombre_completo || "";
+
+  if (!registerName.value) {
+    dniData = null;
+    setDniMessage("El DNI fue encontrado, pero no devolvió un nombre válido.", "error");
+    return;
+  }
+
+  setDniMessage("DNI encontrado correctamente.", "success");
 }
 
 async function loadProfile() {
@@ -428,13 +496,19 @@ async function refreshUserData() {
 }
 
 async function handleRegister() {
+  const dni = registerDni.value.trim();
   const nombre = registerName.value.trim();
   const email = registerEmail.value.trim();
   const password = registerPassword.value.trim();
   const confirmPassword = registerPasswordConfirm.value.trim();
 
-  if (!nombre || !email || !password || !confirmPassword) {
+  if (!dni || !nombre || !email || !password || !confirmPassword) {
     setAuthMessage("Completa todos los campos para crear tu cuenta.", "error");
+    return;
+  }
+
+  if (!dniData || dniData.dni !== dni) {
+    setAuthMessage("Primero debes buscar y validar tu DNI.", "error");
     return;
   }
 
@@ -456,7 +530,13 @@ async function handleRegister() {
     password,
     options: {
       data: {
-        nombre
+        dni: dniData.dni || dni,
+        nombre: dniData.nombre_completo || nombre,
+        nombre_completo: dniData.nombre_completo || nombre,
+        direccion: dniData.direccion || "",
+        departamento: dniData.departamento || "",
+        provincia: dniData.provincia || "",
+        distrito: dniData.distrito || ""
       }
     }
   });
@@ -466,16 +546,25 @@ async function handleRegister() {
 
   if (error) {
     console.error(error);
-    setAuthMessage(error.message, "error");
+
+    if (error.message && error.message.toLowerCase().includes("database")) {
+      setAuthMessage("No se pudo crear la cuenta. Es posible que este DNI ya esté registrado.", "error");
+    } else {
+      setAuthMessage(error.message, "error");
+    }
+
     return;
   }
 
   setAuthMessage("Cuenta creada correctamente. Ya puedes iniciar sesión.", "success");
 
+  registerDni.value = "";
   registerName.value = "";
   registerEmail.value = "";
   registerPassword.value = "";
   registerPasswordConfirm.value = "";
+  dniData = null;
+  setDniMessage("");
 
   if (data.session) {
     currentUser = data.session.user;
@@ -898,18 +987,12 @@ async function loadAdminSubmissions() {
   });
 }
 
-commitmentBtn.addEventListener("click", () => {
-  if (!requireLogin()) return;
-
-  commitmentMessage.textContent = "Gracias por ser parte del cambio en Florencia de Mora.";
-  showToast("Compromiso aceptado.");
-});
-
 openAuthBtn.addEventListener("click", showAuth);
 closeAuthBtn.addEventListener("click", hideAuth);
 logoutBtn.addEventListener("click", handleLogout);
 loginBtn.addEventListener("click", handleLogin);
 registerBtn.addEventListener("click", handleRegister);
+searchDniBtn.addEventListener("click", searchDni);
 
 showLoginBtn.addEventListener("click", () => {
   loginForm.classList.remove("hidden");
@@ -931,6 +1014,7 @@ refreshAdminBtn.addEventListener("click", loadAdminSubmissions);
 
 async function initApp() {
   setupPasswordToggles();
+  setupDniInput();
 
   const { data } = await db.auth.getSession();
 
