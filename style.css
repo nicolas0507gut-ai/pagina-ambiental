@@ -373,16 +373,25 @@ a {
   font-size: 15px;
 }
 
+.auth-form input[readonly] {
+  background: #f1f6f3;
+  color: #315846;
+  cursor: not-allowed;
+}
+
+.dni-wrapper,
 .password-wrapper {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
+.dni-wrapper input,
 .password-wrapper input {
   width: 100%;
 }
 
+#searchDniBtn,
 .toggle-password {
   border: none;
   background: #e8f8ed;
@@ -391,11 +400,18 @@ a {
   padding: 13px 16px;
   border-radius: 14px;
   cursor: pointer;
-  min-width: 86px;
+  min-width: 110px;
 }
 
+#searchDniBtn:hover,
 .toggle-password:hover {
   background: #d3f1dd;
+}
+
+#searchDniBtn:disabled {
+  background: #a8b7ad;
+  color: white;
+  cursor: not-allowed;
 }
 
 .auth-form button {
@@ -424,6 +440,24 @@ a {
 
 #authMessage.success {
   color: #16854e;
+}
+
+.dni-message {
+  font-size: 14px;
+  font-weight: bold;
+  min-height: 20px;
+}
+
+.dni-message.error {
+  color: #c0392b;
+}
+
+.dni-message.success {
+  color: #16854e;
+}
+
+.dni-message.loading {
+  color: #d18b00;
 }
 
 .info-grid,
@@ -651,7 +685,6 @@ a {
 }
 
 .submit-evidence-btn,
-#commitmentBtn,
 .refresh-btn {
   width: 100%;
   margin-top: 18px;
@@ -666,7 +699,6 @@ a {
 }
 
 .submit-evidence-btn:hover,
-#commitmentBtn:hover,
 .refresh-btn:hover {
   background: #0b4d36;
   transform: translateY(-2px);
@@ -875,39 +907,6 @@ a {
   background: #922b21;
 }
 
-.commitment {
-  margin: 40px auto 80px;
-  max-width: 900px;
-  background: #123527;
-  color: white;
-  text-align: center;
-  padding: 55px 30px;
-  border-radius: 30px;
-}
-
-.commitment h2 {
-  font-size: 36px;
-  margin-bottom: 15px;
-}
-
-.commitment p {
-  max-width: 650px;
-  margin: auto;
-}
-
-#commitmentBtn {
-  max-width: 260px;
-  margin: 25px auto 0;
-  background: #9be15d;
-  color: #123527;
-}
-
-#commitmentMessage {
-  margin-top: 18px;
-  font-weight: bold;
-  color: #dfffe8;
-}
-
 footer {
   text-align: center;
   background: #0b4d36;
@@ -973,11 +972,13 @@ footer {
     justify-content: space-between;
   }
 
+  .dni-wrapper,
   .password-wrapper {
     flex-direction: column;
     align-items: stretch;
   }
 
+  #searchDniBtn,
   .toggle-password {
     width: 100%;
   }
