@@ -39,6 +39,7 @@ const userDashboard = document.getElementById("userDashboard");
 const dashboardName = document.getElementById("dashboardName");
 const dashboardPoints = document.getElementById("dashboardPoints");
 const dashboardRole = document.getElementById("dashboardRole");
+const dashboardRank = document.getElementById("dashboardRank");
 const mySubmissionsList = document.getElementById("mySubmissionsList");
 
 const photoInputs = document.querySelectorAll(".mission-photo");
@@ -48,10 +49,31 @@ const adminPanel = document.getElementById("adminPanel");
 const adminSubmissionsList = document.getElementById("adminSubmissionsList");
 const refreshAdminBtn = document.getElementById("refreshAdminBtn");
 
+const heroCarouselImage = document.getElementById("heroCarouselImage");
+const carouselDots = document.querySelectorAll(".carousel-dot");
+const podiumList = document.getElementById("podiumList");
+
 let currentUser = null;
 let currentProfile = null;
 let mySubmissions = [];
 let dniData = null;
+let currentRanking = null;
+let carouselIndex = 0;
+
+const heroImages = [
+  {
+    src: "img/florencia-1.jpg",
+    alt: "Pista deteriorada en Florencia de Mora"
+  },
+  {
+    src: "img/florencia-2.jpg",
+    alt: "Acumulación de residuos en Florencia de Mora"
+  },
+  {
+    src: "img/florencia-3.jpg",
+    alt: "Zona afectada por polvo y basura en Florencia de Mora"
+  }
+];
 
 const dailyQuestions = {
   consejo: [
@@ -166,6 +188,25 @@ function setDniMessage(message, type = "") {
   dniMessage.className = "dni-message " + type;
 }
 
+function setupHeroCarousel() {
+  if (!heroCarouselImage) return;
+
+  setInterval(() => {
+    carouselIndex = (carouselIndex + 1) % heroImages.length;
+
+    heroCarouselImage.src = heroImages[carouselIndex].src;
+    heroCarouselImage.alt = heroImages[carouselIndex].alt;
+
+    carouselDots.forEach((dot, index) => {
+      if (index === carouselIndex) {
+        dot.classList.add("active");
+      } else {
+        dot.classList.remove("active");
+      }
+    });
+  }, 3000);
+}
+
 function setupPasswordToggles() {
   passwordToggleButtons.forEach(button => {
     button.addEventListener("click", () => {
@@ -206,6 +247,8 @@ function setupEmailInput() {
 }
 
 function getBadge(points) {
+  if (points >= 300) return "Líder EcoFlorencia";
+  if (points >= 200) return "Protector del Distrito";
   if (points >= 100) return "Protector de Florencia";
   if (points >= 60) return "Guardián Ambiental";
   if (points >= 30) return "Vecino Responsable";
@@ -216,8 +259,15 @@ function updateProgressUI(points) {
   scoreElement.textContent = points;
   badgeElement.textContent = getBadge(points);
 
-  let percentage = (points / 100) * 100;
-  if (percentage > 100) percentage = 100;
+  let percentage = 0;
+
+  if (points > 0) {
+    percentage = points % 100;
+
+    if (percentage === 0) {
+      percentage = 100;
+    }
+  }
 
   progressFill.style.width = percentage + "%";
 }
@@ -262,6 +312,65 @@ async function validarDisponibilidadRegistro(dni = null, email = null) {
   }
 
   return data;
+}
+
+async function loadPodium() {
+  const { data, error } = await db.rpc("obtener_podio");
+
+  if (error) {
+    console.error(error);
+    if (podiumList) {
+      podiumList.innerHTML = `<p class="empty-text">No se pudo cargar el podio.</p>`;
+    }
+    return;
+  }
+
+  renderPodium(data || []);
+}
+
+function renderPodium(podium) {
+  if (!podiumList) return;
+
+  const first = podium.find(item => item.posicion === 1);
+  const second = podium.find(item => item.posicion === 2);
+  const third = podium.find(item => item.posicion === 3);
+
+  podiumList.innerHTML = `
+    ${renderPodiumCard(second, "second-place", "2")}
+    ${renderPodiumCard(first, "first-place", "1")}
+    ${renderPodiumCard(third, "third-place", "3")}
+  `;
+}
+
+function renderPodiumCard(user, className, position) {
+  const nombre = user?.nombre || "Sin participante";
+  const puntos = user?.puntos || 0;
+
+  return `
+    <article class="podium-card ${className}">
+      <div class="podium-position">${position}</div>
+      <h3>${nombre}</h3>
+      <p>${puntos} puntos</p>
+    </article>
+  `;
+}
+
+async function loadMyRanking() {
+  if (!currentUser) {
+    currentRanking = null;
+    return null;
+  }
+
+  const { data, error } = await db.rpc("obtener_mi_ranking");
+
+  if (error) {
+    console.error(error);
+    currentRanking = null;
+    return null;
+  }
+
+  currentRanking = data && data.length > 0 ? data[0] : null;
+  return currentRanking;
 }
 
 async function searchDni() {
@@ -388,6 +497,7 @@ async function loadMySubmissions() {
 function renderLoggedOutUI() {
   currentProfile = null;
   currentUser = null;
+  currentRanking = null;
   mySubmissions = [];
 
   userStatus.textContent = "Visitante";
@@ -413,6 +523,14 @@ function renderLoggedInUI() {
   dashboardName.textContent = currentProfile.nombre || "Usuario";
   dashboardPoints.textContent = currentProfile.puntos;
   dashboardRole.textContent = currentProfile.rol === "admin" ? "Administrador" : "Usuario";
+
+  if (dashboardRank) {
+    if (currentRanking) {
+      dashboardRank.textContent = "#" + currentRanking.posicion + " de " + currentRanking.total_participantes;
+    } else {
+      dashboardRank.textContent = currentProfile.rol === "admin" ? "Admin" : "Sin ranking";
+    }
+  }
 
   updateProgressUI(currentProfile.puntos);
 
@@ -523,11 +641,14 @@ function renderMySubmissions() {
 async function refreshUserData() {
   if (!currentUser) {
     renderLoggedOutUI();
+    await loadPodium();
     return;
   }
 
   await loadProfile();
   await loadMySubmissions();
+  await loadMyRanking();
+  await loadPodium();
 
   renderLoggedInUI();
   renderMissionStatus();
@@ -614,10 +735,10 @@ async function handleRegister() {
         dni: dniData.dni || dni,
         nombre: dniData.nombre_completo || nombre,
         nombre_completo: dniData.nombre_completo || nombre,
-        direccion: dniData.direccion || "",
-        departamento: dniData.departamento || "",
-        provincia: dniData.provincia || "",
-        distrito: dniData.distrito || ""
+        direccion: dniData.direccion || "NO DISPONIBLE",
+        departamento: dniData.departamento || "NO DISPONIBLE",
+        provincia: dniData.provincia || "NO DISPONIBLE",
+        distrito: dniData.distrito || "NO DISPONIBLE"
       }
     }
   });
@@ -691,6 +812,7 @@ async function handleLogin() {
 async function handleLogout() {
   await db.auth.signOut();
   renderLoggedOutUI();
+  await loadPodium();
   showToast("Sesión cerrada.");
 }
 
@@ -783,6 +905,7 @@ evidenceButtons.forEach(button => {
 
     input.value = "";
     const preview = card.querySelector(".photo-preview");
+
     if (preview) {
       preview.src = "";
       preview.classList.remove("show");
@@ -978,10 +1101,11 @@ async function loadAdminSubmissions() {
 
   const { data: profiles } = await db
     .from("profiles")
-    .select("id, nombre, email")
+    .select("id, nombre, email, direccion, departamento, provincia, distrito")
     .in("id", userIds);
 
   const profileMap = {};
+
   (profiles || []).forEach(profile => {
     profileMap[profile.id] = profile;
   });
@@ -999,6 +1123,8 @@ async function loadAdminSubmissions() {
         <h3>${item.missions?.titulo || item.mission_id}</h3>
         <p><strong>Usuario:</strong> ${profile?.nombre || "Sin nombre"}</p>
         <p><strong>Correo:</strong> ${profile?.email || "Sin correo"}</p>
+        <p><strong>Dirección:</strong> ${profile?.direccion || "No disponible"}</p>
+        <p><strong>Ubicación:</strong> ${profile?.departamento || "-"} / ${profile?.provincia || "-"} / ${profile?.distrito || "-"}</p>
         <p><strong>Fecha:</strong> ${formatDate(item.created_at)}</p>
         <p><strong>Puntos posibles:</strong> ${item.missions?.puntos || 0}</p>
       </div>
@@ -1038,6 +1164,7 @@ async function loadAdminSubmissions() {
 
       showToast("Evidencia aprobada y puntos sumados.");
       await loadAdminSubmissions();
+      await loadPodium();
     });
   });
 
@@ -1076,6 +1203,7 @@ logoutBtn.addEventListener("click", handleLogout);
 loginBtn.addEventListener("click", handleLogin);
 registerBtn.addEventListener("click", handleRegister);
 searchDniBtn.addEventListener("click", searchDni);
+refreshAdminBtn.addEventListener("click", loadAdminSubmissions);
 
 showLoginBtn.addEventListener("click", () => {
   loginForm.classList.remove("hidden");
@@ -1093,12 +1221,13 @@ showRegisterBtn.addEventListener("click", () => {
   setAuthMessage("");
 });
 
-refreshAdminBtn.addEventListener("click", loadAdminSubmissions);
-
 async function initApp() {
+  setupHeroCarousel();
   setupPasswordToggles();
   setupDniInput();
   setupEmailInput();
+
+  await loadPodium();
 
   const { data } = await db.auth.getSession();
 
@@ -1115,6 +1244,7 @@ async function initApp() {
       await refreshUserData();
     } else {
       renderLoggedOutUI();
+      await loadPodium();
     }
   });
 }
