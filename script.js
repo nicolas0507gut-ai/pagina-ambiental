@@ -191,20 +191,24 @@ function setDniMessage(message, type = "") {
 function setupHeroCarousel() {
   if (!heroCarouselImage) return;
 
-  setInterval(() => {
+  function changeImage() {
     carouselIndex = (carouselIndex + 1) % heroImages.length;
 
-    heroCarouselImage.src = heroImages[carouselIndex].src;
-    heroCarouselImage.alt = heroImages[carouselIndex].alt;
+    heroCarouselImage.style.opacity = "0";
 
-    carouselDots.forEach((dot, index) => {
-      if (index === carouselIndex) {
-        dot.classList.add("active");
-      } else {
-        dot.classList.remove("active");
-      }
-    });
-  }, 3000);
+    setTimeout(() => {
+      heroCarouselImage.src = heroImages[carouselIndex].src;
+      heroCarouselImage.alt = heroImages[carouselIndex].alt;
+
+      carouselDots.forEach((dot, index) => {
+        dot.classList.toggle("active", index === carouselIndex);
+      });
+
+      heroCarouselImage.style.opacity = "1";
+    }, 250);
+  }
+
+  setInterval(changeImage, 3000);
 }
 
 function setupPasswordToggles() {
@@ -290,6 +294,7 @@ function requireLogin() {
     showAuth();
     return false;
   }
+
   return true;
 }
 
@@ -315,13 +320,15 @@ async function validarDisponibilidadRegistro(dni = null, email = null) {
 }
 
 async function loadPodium() {
+  if (!podiumList) return;
+
   const { data, error } = await db.rpc("obtener_podio");
 
   if (error) {
-    console.error(error);
-    if (podiumList) {
-      podiumList.innerHTML = `<p class="empty-text">No se pudo cargar el podio.</p>`;
-    }
+    console.error("Error cargando podio:", error);
+    podiumList.innerHTML = `
+      <p class="empty-text">No se pudo cargar el podio.</p>
+    `;
     return;
   }
 
@@ -508,6 +515,7 @@ function renderLoggedOutUI() {
 
   updateProgressUI(0);
   resetMissionCardsForVisitor();
+
   setupDailyQuestion("consejo", "consejoQuestion", "consejoOptions", "consejoMessage", "consejoCooldown");
   setupDailyQuestion("entorno", "entornoQuestion", "entornoOptions", "entornoMessage", "entornoCooldown");
 }
@@ -516,10 +524,12 @@ function renderLoggedInUI() {
   if (!currentProfile) return;
 
   userStatus.textContent = currentProfile.nombre || currentProfile.email || "Usuario";
+
   openAuthBtn.classList.add("hidden");
   logoutBtn.classList.remove("hidden");
 
   userDashboard.classList.remove("hidden");
+
   dashboardName.textContent = currentProfile.nombre || "Usuario";
   dashboardPoints.textContent = currentProfile.puntos;
   dashboardRole.textContent = currentProfile.rol === "admin" ? "Administrador" : "Usuario";
@@ -586,6 +596,7 @@ function renderMissionStatus() {
         status.textContent = "Aprobado. Ganaste " + approved.puntos + " puntos.";
         status.className = "submission-status approved";
       }
+
       return;
     }
 
@@ -597,6 +608,7 @@ function renderMissionStatus() {
         status.textContent = "Tu evidencia fue enviada y está pendiente de revisión.";
         status.className = "submission-status pending";
       }
+
       return;
     }
 
@@ -605,6 +617,7 @@ function renderMissionStatus() {
         status.textContent = rejected.comentario_admin
           ? "Rechazado: " + rejected.comentario_admin
           : "Tu evidencia fue rechazada. Puedes volver a enviar otra.";
+
         status.className = "submission-status rejected";
       }
     }
@@ -768,6 +781,7 @@ async function handleRegister() {
   registerPassword.value = "";
   registerPasswordConfirm.value = "";
   dniData = null;
+
   setDniMessage("");
 
   if (data.session) {
@@ -804,8 +818,10 @@ async function handleLogin() {
   }
 
   currentUser = data.user;
+
   hideAuth();
   showToast("Sesión iniciada correctamente.");
+
   await refreshUserData();
 }
 
@@ -904,6 +920,7 @@ evidenceButtons.forEach(button => {
     }
 
     input.value = "";
+
     const preview = card.querySelector(".photo-preview");
 
     if (preview) {
@@ -912,6 +929,7 @@ evidenceButtons.forEach(button => {
     }
 
     showToast("Evidencia enviada. Quedó pendiente de revisión.");
+
     await refreshUserData();
   });
 });
@@ -1001,6 +1019,7 @@ async function setupDailyQuestion(type, questionId, optionsId, messageId, cooldo
 
     if (remaining) {
       questionElement.textContent = lastAttempt.pregunta;
+
       messageElement.textContent = lastAttempt.fue_correcta
         ? "Respuesta correcta. Ya ganaste puntos por esta pregunta."
         : "Respuesta incorrecta. Perdiste tu oportunidad.";
@@ -1056,6 +1075,7 @@ async function setupDailyQuestion(type, questionId, optionsId, messageId, cooldo
       }
 
       cooldownElement.textContent = "Vuelve en 24 horas para una nueva pregunta.";
+
       await refreshUserData();
     });
 
@@ -1163,8 +1183,10 @@ async function loadAdminSubmissions() {
       }
 
       showToast("Evidencia aprobada y puntos sumados.");
+
       await loadAdminSubmissions();
       await loadPodium();
+      await refreshUserData();
     });
   });
 
@@ -1192,6 +1214,7 @@ async function loadAdminSubmissions() {
       }
 
       showToast("Evidencia rechazada.");
+
       await loadAdminSubmissions();
     });
   });
@@ -1208,16 +1231,20 @@ refreshAdminBtn.addEventListener("click", loadAdminSubmissions);
 showLoginBtn.addEventListener("click", () => {
   loginForm.classList.remove("hidden");
   registerForm.classList.add("hidden");
+
   showLoginBtn.classList.add("active");
   showRegisterBtn.classList.remove("active");
+
   setAuthMessage("");
 });
 
 showRegisterBtn.addEventListener("click", () => {
   registerForm.classList.remove("hidden");
   loginForm.classList.add("hidden");
+
   showRegisterBtn.classList.add("active");
   showLoginBtn.classList.remove("active");
+
   setAuthMessage("");
 });
 
@@ -1236,6 +1263,7 @@ async function initApp() {
     await refreshUserData();
   } else {
     renderLoggedOutUI();
+    await loadPodium();
   }
 
   db.auth.onAuthStateChange(async (event, session) => {
