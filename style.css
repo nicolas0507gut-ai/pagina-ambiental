@@ -1123,3 +1123,179 @@ footer {
     min-height: 190px;
   }
 }
+/* ============================= */
+/* CORRECCIÓN CARRUSEL Y PODIO */
+/* ============================= */
+
+.hero-carousel-card {
+  position: relative;
+  width: 100%;
+  height: 360px;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 18px 45px rgba(21, 77, 53, 0.18);
+  border: 1px solid rgba(22, 133, 78, 0.18);
+  background: #dff6d8;
+}
+
+.hero-carousel-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.4s ease;
+}
+
+.hero-carousel-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(11, 77, 54, 0.78),
+    rgba(11, 77, 54, 0.12)
+  );
+  z-index: 1;
+}
+
+.carousel-text {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 46px;
+  color: white;
+  z-index: 2;
+}
+
+.carousel-text h3 {
+  font-size: 25px;
+  margin-bottom: 8px;
+  color: white;
+}
+
+.carousel-text p {
+  color: #e9fff0;
+  font-size: 15px;
+}
+
+.carousel-dots {
+  position: absolute;
+  left: 24px;
+  bottom: 20px;
+  display: flex;
+  gap: 8px;
+  z-index: 3;
+}
+
+.carousel-dot {
+  width: 11px;
+  height: 11px;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+}
+
+.carousel-dot.active {
+  background: #9be15d;
+}
+
+.podium-section {
+  max-width: none;
+  padding: 80px 20px;
+  background: #f4fbf6;
+}
+
+.podium-section .section-title {
+  max-width: 900px;
+  margin: 0 auto 45px;
+  text-align: center;
+}
+
+.podium-grid {
+  max-width: 1150px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  gap: 24px;
+  align-items: end;
+}
+
+.podium-card {
+  background: white;
+  border-radius: 26px;
+  padding: 28px 22px;
+  text-align: center;
+  box-shadow: 0 14px 35px rgba(21, 77, 53, 0.12);
+  border: 1px solid #d9eadf;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.podium-card h3 {
+  color: #123527;
+  font-size: 22px;
+  margin: 12px 0 6px;
+}
+
+.podium-card p {
+  color: #16854e;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.podium-position {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+}
+
+.first-place {
+  min-height: 250px;
+  border-top: 8px solid #f4c542;
+}
+
+.second-place {
+  min-height: 220px;
+  border-top: 8px solid #a8b7ad;
+}
+
+.third-place {
+  min-height: 205px;
+  border-top: 8px solid #c47a3c;
+}
+
+.first-place .podium-position {
+  background: #f4c542;
+  color: #123527;
+}
+
+.second-place .podium-position {
+  background: #8d9a91;
+}
+
+.third-place .podium-position {
+  background: #c47a3c;
+}
+
+@media (max-width: 900px) {
+  .podium-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-carousel-card {
+    height: 300px;
+  }
+
+  .first-place,
+  .second-place,
+  .third-place {
+    min-height: 190px;
+  }
+}
