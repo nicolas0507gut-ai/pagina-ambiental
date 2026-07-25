@@ -17,9 +17,9 @@
       <div class="logo">EcoFlorencia</div>
 
       <div class="nav-links">
-        <a href="#problema">Problema</a>
-        <a href="#consecuencias">Consecuencias</a>
+        <a href="#podio">Podio</a>
         <a href="#misiones">Misiones</a>
+        <a href="#problema">Información</a>
         <a href="#reutiliza">Reutiliza</a>
       </div>
 
@@ -40,15 +40,23 @@
         </p>
         <div class="hero-buttons">
           <a href="#misiones" class="btn primary">Empezar misiones</a>
-          <a href="#consecuencias" class="btn secondary">Ver consecuencias</a>
+          <a href="#podio" class="btn secondary">Ver podio</a>
         </div>
       </div>
 
-      <div class="hero-card">
-        <h3>Resumen del proyecto</h3>
-        <p><strong>Zona:</strong> Florencia de Mora</p>
-        <p><strong>Problemas:</strong> polvo, pistas deterioradas y residuos sólidos</p>
-        <p><strong>Objetivo:</strong> informar, educar y promover acciones sostenibles</p>
+      <div class="hero-carousel-card">
+        <img id="heroCarouselImage" src="img/florencia-1.jpg" alt="Zona afectada de Florencia de Mora">
+
+        <div class="carousel-text">
+          <h3>Zonas afectadas de Florencia de Mora</h3>
+          <p>Imágenes que muestran la realidad ambiental del distrito.</p>
+        </div>
+
+        <div class="carousel-dots">
+          <span class="carousel-dot active"></span>
+          <span class="carousel-dot"></span>
+          <span class="carousel-dot"></span>
+        </div>
       </div>
     </section>
   </header>
@@ -132,12 +140,43 @@
       </div>
     </section>
 
+    <section id="podio" class="section podium-section">
+      <div class="section-title">
+        <span>Participación ciudadana</span>
+        <h2>Podio EcoFlorencia</h2>
+        <p>
+          Estos son los vecinos con mayor puntaje por participar en misiones ambientales
+          y responder preguntas de conciencia ambiental.
+        </p>
+      </div>
+
+      <div id="podiumList" class="podium-grid">
+        <article class="podium-card second-place">
+          <div class="podium-position">2</div>
+          <h3>Cargando...</h3>
+          <p>0 puntos</p>
+        </article>
+
+        <article class="podium-card first-place">
+          <div class="podium-position">1</div>
+          <h3>Cargando...</h3>
+          <p>0 puntos</p>
+        </article>
+
+        <article class="podium-card third-place">
+          <div class="podium-position">3</div>
+          <h3>Cargando...</h3>
+          <p>0 puntos</p>
+        </article>
+      </div>
+    </section>
+
     <section id="userDashboard" class="section user-dashboard hidden">
       <div class="section-title">
         <span>Mi progreso</span>
         <h2>Resumen de participación</h2>
         <p>
-          Aquí se muestra tu puntaje y el estado de las evidencias que enviaste.
+          Aquí se muestra tu puntaje, tu posición y el estado de las evidencias que enviaste.
         </p>
       </div>
 
@@ -149,12 +188,17 @@
 
         <article class="dashboard-card">
           <h3 id="dashboardPoints">0</h3>
-          <p>Puntos aprobados</p>
+          <p>Puntos acumulados</p>
         </article>
 
         <article class="dashboard-card">
           <h3 id="dashboardRole">Usuario</h3>
           <p>Rol dentro del sistema</p>
+        </article>
+
+        <article class="dashboard-card">
+          <h3 id="dashboardRank">Sin ranking</h3>
+          <p>Tu posición en EcoFlorencia</p>
         </article>
       </div>
 
@@ -163,6 +207,157 @@
         <div id="mySubmissionsList" class="submission-list">
           <p class="empty-text">Aún no enviaste evidencias.</p>
         </div>
+      </div>
+    </section>
+
+    <section class="section missions-section" id="misiones">
+      <div class="section-title light">
+        <span>Participa desde casa</span>
+        <h2>Misiones ambientales</h2>
+        <p>
+          Las misiones con foto no dan puntos automáticamente. Primero debes enviar tu evidencia
+          y luego el administrador la revisará manualmente.
+        </p>
+      </div>
+
+      <div class="progress-panel">
+        <div>
+          <p class="small-text">Tus puntos</p>
+          <h3 id="score">0</h3>
+        </div>
+
+        <div>
+          <p class="small-text">Nivel actual</p>
+          <h3 id="badge">Visitante Verde</h3>
+        </div>
+
+        <div class="progress-box">
+          <p class="small-text">Avance visual cada 100 puntos</p>
+          <div class="progress-bar">
+            <div id="progressFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="missions-grid">
+
+        <article class="mission-card" data-mission-card="separar-residuos">
+          <h3>Separar residuos</h3>
+          <p>Separa botellas, envolturas o plásticos limpios en una bolsa durante un día.</p>
+
+          <label class="upload-box">
+            Subir foto de evidencia
+            <input type="file" accept="image/*" class="mission-photo" data-preview="preview-separar">
+          </label>
+
+          <img id="preview-separar" class="photo-preview" alt="Vista previa de evidencia">
+
+          <button class="submit-evidence-btn" data-id="separar-residuos">
+            Enviar para verificación
+          </button>
+
+          <p id="status-separar-residuos" class="submission-status"></p>
+        </article>
+
+        <article class="mission-card" data-mission-card="maceta-reciclada">
+          <h3>Maceta reciclada</h3>
+          <p>Convierte una botella o envase plástico en una maceta pequeña para casa.</p>
+
+          <label class="upload-box">
+            Subir foto de evidencia
+            <input type="file" accept="image/*" class="mission-photo" data-preview="preview-maceta">
+          </label>
+
+          <img id="preview-maceta" class="photo-preview" alt="Vista previa de evidencia">
+
+          <button class="submit-evidence-btn" data-id="maceta-reciclada">
+            Enviar para verificación
+          </button>
+
+          <p id="status-maceta-reciclada" class="submission-status"></p>
+        </article>
+
+        <article class="mission-card" data-mission-card="reducir-bolsa">
+          <h3>Reducir una bolsa</h3>
+          <p>Evita usar una bolsa plástica innecesaria o reutiliza una que ya tengas.</p>
+
+          <label class="upload-box">
+            Subir foto de evidencia
+            <input type="file" accept="image/*" class="mission-photo" data-preview="preview-bolsa">
+          </label>
+
+          <img id="preview-bolsa" class="photo-preview" alt="Vista previa de evidencia">
+
+          <button class="submit-evidence-btn" data-id="reducir-bolsa">
+            Enviar para verificación
+          </button>
+
+          <p id="status-reducir-bolsa" class="submission-status"></p>
+        </article>
+
+        <article class="mission-card" data-mission-card="guardar-reciclables">
+          <h3>Guardar reciclables</h3>
+          <p>Lava y guarda una botella, lata o envase que pueda reutilizarse.</p>
+
+          <label class="upload-box">
+            Subir foto de evidencia
+            <input type="file" accept="image/*" class="mission-photo" data-preview="preview-guardar">
+          </label>
+
+          <img id="preview-guardar" class="photo-preview" alt="Vista previa de evidencia">
+
+          <button class="submit-evidence-btn" data-id="guardar-reciclables">
+            Enviar para verificación
+          </button>
+
+          <p id="status-guardar-reciclables" class="submission-status"></p>
+        </article>
+
+        <article class="mission-card daily-question-card">
+          <h3>Consejo ambiental</h3>
+          <p class="daily-intro">
+            Responde correctamente una pregunta sobre buenas prácticas ambientales y gana puntos extra.
+          </p>
+
+          <div class="daily-question-box">
+            <p id="consejoQuestion" class="daily-question"></p>
+            <div id="consejoOptions" class="daily-options"></div>
+            <p id="consejoMessage" class="daily-message"></p>
+            <p id="consejoCooldown" class="daily-cooldown"></p>
+          </div>
+        </article>
+
+        <article class="mission-card daily-question-card">
+          <h3>Observa tu entorno</h3>
+          <p class="daily-intro">
+            Responde una pregunta sobre los problemas ambientales de Florencia de Mora y gana puntos extra.
+          </p>
+
+          <div class="daily-question-box">
+            <p id="entornoQuestion" class="daily-question"></p>
+            <div id="entornoOptions" class="daily-options"></div>
+            <p id="entornoMessage" class="daily-message"></p>
+            <p id="entornoCooldown" class="daily-cooldown"></p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="adminPanel" class="section admin-panel hidden">
+      <div class="section-title">
+        <span>Panel de administrador</span>
+        <h2>Revisión manual de evidencias</h2>
+        <p>
+          Aquí podrás revisar las fotos enviadas por los usuarios y decidir si apruebas
+          o rechazas los puntos.
+        </p>
+      </div>
+
+      <button id="refreshAdminBtn" class="refresh-btn">Actualizar evidencias pendientes</button>
+
+      <div id="adminSubmissionsList" class="admin-list">
+        <p class="empty-text">No hay evidencias pendientes.</p>
       </div>
     </section>
 
@@ -291,157 +486,6 @@
             Las calles con polvo, basura y malos olores reducen el bienestar de las familias.
           </p>
         </article>
-      </div>
-    </section>
-
-    <section class="section missions-section" id="misiones">
-      <div class="section-title light">
-        <span>Participa desde casa</span>
-        <h2>Misiones ambientales</h2>
-        <p>
-          Las misiones con foto no dan puntos automáticamente. Primero debes enviar tu evidencia
-          y luego el administrador la revisará manualmente.
-        </p>
-      </div>
-
-      <div class="progress-panel">
-        <div>
-          <p class="small-text">Tus puntos</p>
-          <h3 id="score">0</h3>
-        </div>
-
-        <div>
-          <p class="small-text">Nivel actual</p>
-          <h3 id="badge">Visitante Verde</h3>
-        </div>
-
-        <div class="progress-box">
-          <p class="small-text">Progreso</p>
-          <div class="progress-bar">
-            <div id="progressFill"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="missions-grid">
-
-        <article class="mission-card" data-mission-card="separar-residuos">
-          <h3>Separar residuos</h3>
-          <p>Separa botellas, envolturas o plásticos limpios en una bolsa durante un día.</p>
-
-          <label class="upload-box">
-            Subir foto de evidencia
-            <input type="file" accept="image/*" class="mission-photo" data-preview="preview-separar">
-          </label>
-
-          <img id="preview-separar" class="photo-preview" alt="Vista previa de evidencia">
-
-          <button class="submit-evidence-btn" data-id="separar-residuos">
-            Enviar para verificación
-          </button>
-
-          <p id="status-separar-residuos" class="submission-status"></p>
-        </article>
-
-        <article class="mission-card" data-mission-card="maceta-reciclada">
-          <h3>Maceta reciclada</h3>
-          <p>Convierte una botella o envase plástico en una maceta pequeña para casa.</p>
-
-          <label class="upload-box">
-            Subir foto de evidencia
-            <input type="file" accept="image/*" class="mission-photo" data-preview="preview-maceta">
-          </label>
-
-          <img id="preview-maceta" class="photo-preview" alt="Vista previa de evidencia">
-
-          <button class="submit-evidence-btn" data-id="maceta-reciclada">
-            Enviar para verificación
-          </button>
-
-          <p id="status-maceta-reciclada" class="submission-status"></p>
-        </article>
-
-        <article class="mission-card" data-mission-card="reducir-bolsa">
-          <h3>Reducir una bolsa</h3>
-          <p>Evita usar una bolsa plástica innecesaria o reutiliza una que ya tengas.</p>
-
-          <label class="upload-box">
-            Subir foto de evidencia
-            <input type="file" accept="image/*" class="mission-photo" data-preview="preview-bolsa">
-          </label>
-
-          <img id="preview-bolsa" class="photo-preview" alt="Vista previa de evidencia">
-
-          <button class="submit-evidence-btn" data-id="reducir-bolsa">
-            Enviar para verificación
-          </button>
-
-          <p id="status-reducir-bolsa" class="submission-status"></p>
-        </article>
-
-        <article class="mission-card" data-mission-card="guardar-reciclables">
-          <h3>Guardar reciclables</h3>
-          <p>Lava y guarda una botella, lata o envase que pueda reutilizarse.</p>
-
-          <label class="upload-box">
-            Subir foto de evidencia
-            <input type="file" accept="image/*" class="mission-photo" data-preview="preview-guardar">
-          </label>
-
-          <img id="preview-guardar" class="photo-preview" alt="Vista previa de evidencia">
-
-          <button class="submit-evidence-btn" data-id="guardar-reciclables">
-            Enviar para verificación
-          </button>
-
-          <p id="status-guardar-reciclables" class="submission-status"></p>
-        </article>
-
-        <article class="mission-card daily-question-card">
-          <h3>Consejo ambiental</h3>
-          <p class="daily-intro">
-            Responde correctamente una pregunta sobre buenas prácticas ambientales y gana puntos extra.
-          </p>
-
-          <div class="daily-question-box">
-            <p id="consejoQuestion" class="daily-question"></p>
-            <div id="consejoOptions" class="daily-options"></div>
-            <p id="consejoMessage" class="daily-message"></p>
-            <p id="consejoCooldown" class="daily-cooldown"></p>
-          </div>
-        </article>
-
-        <article class="mission-card daily-question-card">
-          <h3>Observa tu entorno</h3>
-          <p class="daily-intro">
-            Responde una pregunta sobre los problemas ambientales de Florencia de Mora y gana puntos extra.
-          </p>
-
-          <div class="daily-question-box">
-            <p id="entornoQuestion" class="daily-question"></p>
-            <div id="entornoOptions" class="daily-options"></div>
-            <p id="entornoMessage" class="daily-message"></p>
-            <p id="entornoCooldown" class="daily-cooldown"></p>
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <section id="adminPanel" class="section admin-panel hidden">
-      <div class="section-title">
-        <span>Panel de administrador</span>
-        <h2>Revisión manual de evidencias</h2>
-        <p>
-          Aquí podrás revisar las fotos enviadas por los usuarios y decidir si apruebas
-          o rechazas los puntos.
-        </p>
-      </div>
-
-      <button id="refreshAdminBtn" class="refresh-btn">Actualizar evidencias pendientes</button>
-
-      <div id="adminSubmissionsList" class="admin-list">
-        <p class="empty-text">No hay evidencias pendientes.</p>
       </div>
     </section>
 
